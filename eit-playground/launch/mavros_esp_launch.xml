@@ -1,0 +1,22 @@
+<launch>
+	<arg name="fcu_url" default="udp://:14550@192.168.4.1:14555" />
+	<arg name="gcs_url" default="udp://@localhost:14556" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="fcu_protocol" default="v2.0" />
+    <!-- <arg name="pluginlists_yaml" default="$(find-pkg-share fod4wind_gazebo)/config/mavros_params.yaml" /> -->
+    <arg name="config_yaml" default="$(find-pkg-share eit_playground)/config/px4_config.yaml" />
+
+	<!-- <node pkg="mavros" exec="mavros_node" name="mavros" required="$(eval not respawn_mavros)" output="$(arg log_output)" respawn="$(arg respawn_mavros)"> -->
+	<node pkg="mavros" exec="mavros_node" respawn="true">
+		<param name="fcu_url" value="$(var fcu_url)" />
+		<param name="gcs_url" value="$(var gcs_url)" /> -->
+		<param name="target_system_id" value="$(var tgt_system)" />
+		<param name="target_component_id" value="$(var tgt_component)" />
+		<param name="fcu_protocol" value="$(var fcu_protocol)" />
+		<param name="plugin_denylist" value="[odometry,wheel_odomotry]" />
+
+		<!-- load blacklist, config -->
+		<param from="$(var config_yaml)" />
+	</node>
+</launch>

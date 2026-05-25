@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="eit_playground" exec="relay.py" name="replay_node"/>
+</launch>

@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# @name SDU Drone with Lidar
+#
+# @type Hexarotor x
+#
+
+. ${R}etc/init.d-posix/airframes/6014_sdu_drone
+
+param set-default TRIG_INTERFACE 3
+param set-default TRIG_MODE 4
+
+param set-default MNT_MODE_IN 4
+param set-default MNT_MODE_OUT 2
+param set-default MAV_PROTO_VER 2
+
+set MAV_TYPE 13
+
+set MIXER hexa_x_sdu

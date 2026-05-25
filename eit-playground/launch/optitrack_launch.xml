@@ -1,0 +1,46 @@
+<!-- This launch file is for starting the optitrack system using the onboard mission computer -->
+
+<launch>
+	<!-- VRPN Mocap parameters -->
+	<arg name="motive_tracking" default="drone1" />
+	<arg name="vrpn_server_url" default="192.168.16.50" />
+	<arg name="vrpn_server_port" default="3883" />
+	<!-- <arg name="vrpn_config_yaml" default="$(find-pkg-share vrpn_mocap)/config/client.yaml" /> -->
+
+	<!-- topic_tools  -->
+	<arg name="px4_mocap_topic" default="/mavros/vision_pose/pose" />
+
+	<!-- MAVROS parameters -->
+	<arg name="fcu_url" default="/dev/PX4:921600" />
+	<arg name="gcs_url" default="udp://@192.168.16.183:14556" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="fcu_protocol" default="v2.0" />
+	<!-- <arg name="pluginlists_yaml" default="$(find-pkg-share fod4wind_gazebo)/config/mavros_params.yaml" /> -->
+	<arg name="config_yaml" default="$(find-pkg-share eit_playground)/config/px4_config.yaml" />
+
+	<!-- <node pkg="mavros" exec="mavros_node" name="mavros" required="$(eval not respawn_mavros)" output="$(arg log_output)" respawn="$(arg respawn_mavros)"> -->
+	<node pkg="mavros" exec="mavros_node" respawn="true">
+		<param name="fcu_url" value="$(var fcu_url)" />
+		<param name="gcs_url" value="$(var gcs_url)" /> 
+		<param name="target_system_id" value="$(var tgt_system)" />
+		<param name="target_component_id" value="$(var tgt_component)" />
+		<param name="fcu_protocol" value="$(var fcu_protocol)" />
+		<param name="plugin_denylist" value="[odometry,wheel_odometry]" />
+
+		<!-- load blacklist, config -->
+		<param from="$(var config_yaml)" />
+	</node>
+
+	<node pkg="vrpn_mocap" exec="client_node" name="vrpn_mocap_client_node">
+		<param name="server" value="$(var vrpn_server_url)" />
+		<param name="port" value="$(var vrpn_server_port)" />
+		<!-- <param from="$(var vrpn_config_yaml)" /> -->
+	</node>
+
+	<node pkg="topic_tools" exec="relay" name="px4_mocap_relay">
+		<param name="input_topic" value="/$(var motive_tracking)/pose" />
+		<param name="output_topic" value="$(var px4_mocap_topic)" />
+	</node>
+
+</launch>
