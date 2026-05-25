@@ -1,0 +1,29 @@
+# mavros_param.yaml
+mavros:
+  ros__parameters: {}
+
+mavros_router:
+  ros__parameters: {}
+
+mavros_node:
+  ros__parameters:
+    fcu_url: udp://:14540@0.0.0.0:14580
+
+/**:
+  ros__parameters:
+    plugin_denylist: [odometry]
+    # plugin_blacklist: 
+    # [
+    #   # common
+    #   safety_area,
+    #   # extras
+    #   image_pub,
+    #   vibration,
+    #   distance_sensor,
+    #   rangefinder,
+    #   wheel_odometry,
+    #   #- imu
+    #   mission
+    #   #- global_position
+    # ]
+    # # plugin_allowlist: []

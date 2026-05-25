@@ -1,0 +1,73 @@
+<?xml version='1.0'?>
+<sdf version="1.6">
+  <model name="target1">
+
+    <static>true</static>
+
+    <link name="pole_link">
+      <pose>0 0 1.5 0 0 0</pose>
+
+      <visual name="pole_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>
+            <length>3</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.8 0.8 0.8 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+        </material>
+      </visual>
+
+      <collision name="pole_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>
+            <length>3</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="ball_link">
+      <pose>0 0 3.05 0 0 0</pose>
+
+      <visual name="ball_visual">
+        <geometry>
+          <sphere>
+            <radius>0.1</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+      <collision name="ball_collision">
+        <geometry>
+          <sphere>
+            <radius>0.1</radius>
+          </sphere>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="ball_joint" type="fixed">
+      <parent>pole_link</parent>
+      <child>ball_link</child>
+    </joint>
+
+    <plugin name="ball_pose_publisher" filename="libgazebo_ros_p3d.so">
+      <ros>
+        <namespace>/TARGET_NAMESPACE</namespace>
+        <remapping>odom:=pose</remapping>
+      </ros>
+      <body_name>ball_link</body_name>
+      <frame_name>world</frame_name>
+      <update_rate>30.0</update_rate>
+    </plugin>
+
+  </model>
+</sdf>

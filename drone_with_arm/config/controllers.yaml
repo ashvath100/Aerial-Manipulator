@@ -1,0 +1,22 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    gimbal_controller:
+      type: forward_command_controller/ForwardCommandController
+
+arm_controller:
+  ros__parameters:
+    joints: [joint1, joint2]
+    interface_name: position
+
+gimbal_controller:
+  ros__parameters:
+    joints: [gimbal_pitch_joint, gimbal_roll_joint]
+    interface_name: position

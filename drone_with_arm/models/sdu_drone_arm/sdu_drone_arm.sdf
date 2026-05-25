@@ -1,0 +1,216 @@
+<?xml version='1.0'?>
+<sdf version="1.6">
+  <model name="drone_with_arm">
+
+    <!-- Include the drone -->
+    <include>
+      <uri>model://sdu_drone</uri>
+      <name>drone</name>
+    </include>
+
+    <!-- Create two-dof arm and gimbal -->
+    <link name='arm_base_link'>
+      <pose>0 0 0.12 0 3.14159 3.14159</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.00001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00001</iyy>
+          <iyz>0</iyz>
+          <izz>0.00001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <link name="gimbal_pitch_link">
+      <pose relative_to='arm_base_link'>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.00001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00001</iyy>
+          <iyz>0</iyz>
+          <izz>0.00001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <joint name="gimbal_pitch_joint" type="revolute">
+      <parent>arm_base_link</parent>
+      <child>gimbal_pitch_link</child>
+      <pose relative_to='arm_base_link'>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.57</lower>
+          <upper>1.57</upper>
+          <effort>5</effort>
+          <velocity>1</velocity>
+        </limit>
+      </axis>
+    </joint>
+
+    <link name="gimbal_roll_link">
+      <pose relative_to='gimbal_pitch_link'>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.00001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00001</iyy>
+          <iyz>0</iyz>
+          <izz>0.00001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <joint name="gimbal_roll_joint" type="revolute">
+      <parent>gimbal_pitch_link</parent>
+      <child>gimbal_roll_link</child>
+      <pose relative_to='gimbal_pitch_link'>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.57</lower>
+          <upper>1.57</upper>
+          <effort>5</effort>
+          <velocity>1</velocity>
+        </limit>
+      </axis>
+    </joint>
+
+    <joint name='joint1' type='revolute'>
+      <pose relative_to='gimbal_roll_link'>0 0 0.20 0 0 0</pose>
+      <parent>gimbal_roll_link</parent>
+      <child>link1</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.14</lower>
+          <upper>3.14</upper>
+          <effort>10</effort>
+          <velocity>3</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <link name='link1'>
+      <pose relative_to='joint1'>0 0 0.08 0 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.000005</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000005</iyy>
+          <iyz>0</iyz>
+          <izz>0.000005</izz>
+        </inertia>
+      </inertial>
+      <visual name='link1_visual'>
+        <geometry>
+          <cylinder>
+            <length>0.16</length>
+            <radius>0.03</radius>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name='joint2' type='revolute'>
+      <pose relative_to='link1'>0 0 0.08 0 0 0</pose>
+      <parent>link1</parent>
+      <child>link2</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>10</effort>
+          <velocity>3</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <link name='link2'>
+      <pose relative_to='joint2'>0 0 0.08 0 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.000003</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000003</iyy>
+          <iyz>0</iyz>
+          <izz>0.000003</izz>
+        </inertia>
+      </inertial>
+      <visual name='link2_visual'>
+        <geometry>
+          <cylinder>
+            <length>0.16</length>
+            <radius>0.025</radius>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+    
+    <joint name='end_effector_joint' type='fixed'>
+      <pose relative_to='link2'>0 0 0.08 0 0 0</pose>
+      <parent>link2</parent>
+      <child>end_effector_link</child>
+    </joint>
+
+    <link name='end_effector_link'>
+      <pose relative_to='end_effector_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000001</iyy>
+          <iyz>0</iyz>
+          <izz>0.000001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <!-- FIXED JOINT attaching arm to drone -->
+    <joint name="arm_mount_joint" type="fixed">
+      <parent>drone::base_link</parent>
+      <child>arm_base_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
+    <!-- Controller plugin for gimbal and arm -->
+    <plugin name='gazebo_ros2_control' filename='libgazebo_ros2_control.so'>
+      <parameters>/home/ash/MAS_ws_public/install/drone_with_arm/share/drone_with_arm/config/controllers.yaml</parameters>
+    </plugin>
+    
+    <!-- Plugin for end effector pose publishing -->
+    <plugin name="end_effector_pose_publisher" filename="libgazebo_ros_p3d.so">
+      <ros>
+        <namespace>end_effector</namespace>
+        <remapping>odom:=pose</remapping>
+      </ros>
+      <body_name>end_effector_link</body_name>
+      <frame_name>world</frame_name>
+      <update_rate>30.0</update_rate>
+    </plugin>
+
+  </model>
+</sdf>
